@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  const supabase = useSupabaseClient()
-  
   const loading = ref(false)
   const sent = ref(false)
   const email = ref('')
@@ -34,10 +32,14 @@
     }
   }
   const router = useIonRouter()
-  watchEffect(() => {
-    if (useSupabaseUser().value) {
-      navigateTo('/')
-    }
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event == 'SIGNED_IN') navigateTo('/')
+  })
+
+  const user = ref()
+  onMounted(async () => {
+    user.value = await supabase.auth.getUser()
+    console.log((await user.value).data)
   })
 </script>
 
@@ -60,6 +62,5 @@
             Log In
           </IonButton>
       </IonContent>
-
     </IonPage>  
 </template>

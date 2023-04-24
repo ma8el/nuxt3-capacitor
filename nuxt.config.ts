@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  modules: ['@nuxtjs/supabase', '@nuxtjs/ionic'],
+  modules: ['@nuxtjs/ionic'],
   css: [
       '@ionic/core/css/core.css',
       '@ionic/core/css/normalize.css',

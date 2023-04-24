@@ -13,12 +13,13 @@
         <IonButton @click="handleSignOut">
           Sign Out
         </IonButton>
+        <h3 v-if="!user">Loading</h3>
+        <h3 v-else>{{ user }}</h3>
       </IonContent>
     </IonPage>
 </template>
 
 <script setup lang="ts">
-  const supabase = useSupabaseClient()
   const handleSignOut = async () => {
     try {
       const { error } = await supabase.auth.signOut()
@@ -27,10 +28,13 @@
       alert(error.error_description || error.message)
     }
   }
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event == 'SIGNED_OUT') navigateTo('/login')
+  })
 
-  watchEffect(() => {
-    if (!useSupabaseUser().value) {
-      navigateTo('/login')
-    }
+  const user = ref()
+  onMounted(async () => {
+    user.value = await supabase.auth.getUser()
+    console.log((await user.value).data)
   })
 </script>
